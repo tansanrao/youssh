@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<nb-layout withScroll>
+
+    <nb-layout-header fixed>
+        <!-- Insert header here -->
+        <app-header></app-header>
+    </nb-layout-header>
+
+    <!--  Sidebar -->
+    <nb-sidebar class="menu-sidebar" responsive tag="menu-sidebar">
+        <div class="container-sidebar">
+            <nb-menu [items]="menu"></nb-menu>
+        </div>
+    </nb-sidebar>
+
+    <nb-layout-column>
+        <!-- Insert Content Here -->
+    <router-outlet></router-outlet>
+    </nb-layout-column>
+    
+    <nb-layout-footer fixed>
+        <app-footer></app-footer>
+    </nb-layout-footer>
+
+</nb-layout>

@@ -1,0 +1,36 @@
+@import '~@nebular/theme/styles/global/breakpoints';
+@import '../../../themes';
+
+@include nb-install-component() {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    width: auto;
+
+    .sidebar-toggle {
+      text-decoration: none;
+      color: nb-theme(text-hint-color);
+
+      nb-icon {
+        font-size: 1.75rem;
+      }
+    }
+
+    .logo {
+      padding: 0 1.25rem;
+      font-size: 1.75rem;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+  }
+}
