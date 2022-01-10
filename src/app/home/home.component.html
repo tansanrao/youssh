@@ -1,0 +1,40 @@
+<div class="card-row">
+  <div class="card-col">
+    <nb-card size="small">
+      <nb-card-header>Hosts</nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let host of hostsStateService.hostsState" class="container">
+          <button class="col-2" ghost nbButton outline
+                  routerLink="/detail/{{host.hostName}}" status="primary">
+            <nb-icon icon="monitor-outline"></nb-icon>
+          </button>
+          <div class="col-10">
+            {{ host.hostName }}
+          </div>
+
+        </nb-list-item>
+        <nb-list-item class="container">
+          <button (click)="sshConfigEdit()" class="col-2" ghost nbButton
+                  outline status="info">
+            <nb-icon icon="plus-outline"></nb-icon>
+          </button>
+          <div class="col-10">
+            Add/Remove Hosts
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+  <div>
+    <nb-card size="tiny">
+      <nb-card-header>Active Forwards</nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let process of processManagerService.subProcesses" class="container">
+          <div class="col-12">
+            {{ process.hostName }} localhost:{{ process.localPort }}->{{ process.remotePort }}
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="card-row">
+    <div class="card-col">
+        <nb-card>
+            <nb-card-header>App Settings</nb-card-header>
+            <nb-card-body>
+                <div class="form-group row">
+                    <label for="themeSelector" class="col-3 col-form-label">Theme</label>
+                    <nb-select class="col-9" (selectedChange)="changeTheme($event)" [selected]="currentTheme"
+                        status="primary" id="themeSelector" fullWidth>
+                        <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
+                    </nb-select>
+                </div>
+            </nb-card-body>
+        </nb-card>
+
+        <nb-card>
+            <nb-card-header>Debug</nb-card-header>
+            <nb-card-body>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

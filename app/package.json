@@ -1,7 +1,13 @@
 {
-  "name": "youssh",
+  "name": "YouSSH",
   "version": "1.0.0",
   "main": "main.js",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "got": "^12.0.1",
+    "metascraper": "^5.25.7",
+    "metascraper-logo": "^5.25.7",
+    "metascraper-title": "^5.25.7",
+    "ssh-config": "^4.1.1"
+  }
 }

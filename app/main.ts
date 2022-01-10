@@ -1,9 +1,15 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, Menu, screen } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import { IPCMainListener } from './subsystems/IPCMainListener';
+
+// need to chdir if opened by clicking Electron.app on MacOS
+process.chdir(__dirname);
 
 let win: BrowserWindow = null;
+// Menu.setApplicationMenu(null);
+
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
@@ -16,8 +22,8 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width: 450,
+    height: 800,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -64,7 +70,12 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    // Init IPCMainListener
+    const ipcMainListener = IPCMainListener.instance;
+    setTimeout(createWindow, 400)
+  });
+
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -86,4 +97,8 @@ try {
 } catch (e) {
   // Catch Error
   // throw e;
+}
+
+export function sendToFrontend(channel, args: {}) {
+  win.webContents.send(channel, args)
 }

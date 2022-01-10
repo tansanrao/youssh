@@ -1,7 +1,36 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.DETAIL.TITLE' | translate }}
-  </h1>
+<div class="card-row">
+  <div class="card-col">
+    <nb-card size="large">
+      <nb-card-header>{{hostName}}</nb-card-header>
+      <nb-card-body>
+        Last Connection Status: {{hostState.lastConnectionStatus}} <br>
+        Uptime: {{hostState.uptime}} <br>
+        Default PWD: {{hostState.defaultPwd}} <br>
+        GPU Info: {{hostState.gpuInfo}} <br><br>
+        Remote Processes: <br>
+        <div *ngFor="let proc of hostState.remoteProcesses" class="row">
+          <div class="col-10">
+            Command: {{proc.command}} <br>
+            Port: {{proc.remotePort}} <span *ngIf="proc.state === 'forwarded'">-> {{proc.localPort}}</span>
+          </div>
+          <div class="col-2">
+            <button (click)="hostStateService.forwardPort(hostName, proc.remotePort)"
+                    *ngIf="proc.state === 'unforwarded'"
+                    ghost nbButton
+                    outline size="small" status="success">
+              <nb-icon icon="plus-circle-outline"></nb-icon>
+            </button>
+            <button (click)="hostStateService.stopForwardedPort(hostName, proc.remotePort)"
+                    *ngIf="proc.state === 'forwarded'"
+                    ghost nbButton
+                    outline size="small" status="danger">
+              <nb-icon icon="minus-circle-outline"></nb-icon>
+            </button>
+          </div>
 
-  <a routerLink="/">{{ 'PAGES.DETAIL.BACK_TO_HOME' | translate }}</a>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
 </div>

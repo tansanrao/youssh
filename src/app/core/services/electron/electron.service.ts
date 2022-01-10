@@ -10,10 +10,10 @@ import * as fs from 'fs';
   providedIn: 'root'
 })
 export class ElectronService {
-  ipcRenderer: typeof ipcRenderer;
-  webFrame: typeof webFrame;
-  childProcess: typeof childProcess;
-  fs: typeof fs;
+  public ipcRenderer: typeof ipcRenderer;
+  public webFrame: typeof webFrame;
+  public childProcess: typeof childProcess;
+  public fs: typeof fs;
 
   constructor() {
     // Conditional imports

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { ElectronService } from './core/services';
-import { TranslateService } from '@ngx-translate/core';
-import { APP_CONFIG } from '../environments/environment';
-import { NbMenuItem } from '@nebular/theme';
+import {Component, OnInit} from '@angular/core';
+import {ElectronService} from './core/services';
+import {TranslateService} from '@ngx-translate/core';
+import {APP_CONFIG} from '../environments/environment';
+import {NbMenuItem} from '@nebular/theme';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +16,11 @@ export class AppComponent {
       link: '/home',
       icon: 'home-outline',
     },
+    {
+      title: 'Settings',
+      link: '/settings/app',
+      icon: 'settings-outline',
+    }
   ];
 
   constructor(
@@ -23,15 +28,10 @@ export class AppComponent {
     private translate: TranslateService
   ) {
     this.translate.setDefaultLang('en');
-    console.log('APP_CONFIG', APP_CONFIG);
-
-    if (electronService.isElectron) {
-      console.log(process.env);
-      console.log('Run in electron');
-      console.log('Electron ipcRenderer', this.electronService.ipcRenderer);
-      console.log('NodeJS childProcess', this.electronService.childProcess);
+    if (this.electronService.isElectron) {
+      console.log('Running in electron');
     } else {
-      console.log('Run in browser');
+      console.log('Running in browser');
     }
   }
 }

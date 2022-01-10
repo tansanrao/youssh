@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
-import { DetailComponent } from './detail.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Routes, RouterModule} from '@angular/router';
+import {DetailComponent} from './detail.component';
 
 const routes: Routes = [
   {
-    path: 'detail',
+    path: 'detail/:hostName',
     component: DetailComponent
   }
 ];
@@ -15,4 +15,5 @@ const routes: Routes = [
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class DetailRoutingModule {}
+export class DetailRoutingModule {
+}
