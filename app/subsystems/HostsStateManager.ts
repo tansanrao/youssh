@@ -1,9 +1,9 @@
-import {exec} from "child_process";
-import {dialog} from "electron";
+import { exec } from "child_process";
+import { dialog } from "electron";
 import * as path from "path";
-import {sendToFrontend} from "../main";
-import {IRemoteProcess, ProcessManager} from "./ProcessManager";
-import {SSHConfigManager} from "./SSHConfigManager";
+import { sendToFrontend } from "../main";
+import { IRemoteProcess, ProcessManager } from "./ProcessManager";
+import { SSHConfigManager } from "./SSHConfigManager";
 
 export interface IHostState {
   hostName: string,
@@ -23,7 +23,7 @@ export class HostsStateManager {
     if (process.platform == 'darwin') {
       // Mac does not natively have ssh-askpass or have an X11 DISPLAY, so we
       // need to fake it
-      this.sshEnv = {...process.env, "DISPLAY": "1", "SSH_ASKPASS": path.join(__dirname, "askpass.osascript")};
+      this.sshEnv = { ...process.env, "DISPLAY": "1", "SSH_ASKPASS": path.join(__dirname, "askpass.osascript") };
 
       // Needed to find Homebrew binaries (eg sshfs) when
       // launched from Dock
@@ -33,7 +33,7 @@ export class HostsStateManager {
         process.env.PATH = `/usr/local/bin/:${process.env.PATH}`;
       }
     } else {
-      this.sshEnv = {...process.env};
+      this.sshEnv = { ...process.env };
     }
 
     this.initializeHostsState()
@@ -92,7 +92,7 @@ export class HostsStateManager {
     // spawn ssh session
     const spawned = exec(
       sshCommand,
-      {"env": this.sshEnv, "timeout": 20000},
+      { "env": this.sshEnv, "timeout": 20000 },
       (err, stdout, stderr) => {
         let output = '' + stdout;
         let code = err ? err.code : 0;
@@ -102,7 +102,7 @@ export class HostsStateManager {
           // (don't fail on other exit codes since commands could
           // fail or not exist even if the connection works)
           console.log(`error code ${code}`);
-          this.updateHostState(hostName, {"lastConnectionStatus": 'fail'})
+          this.updateHostState(hostName, { "lastConnectionStatus": 'fail' })
           sendToFrontend('updateHostsState', this.hostsState);
           return;
         }
@@ -159,45 +159,47 @@ export class HostsStateManager {
         }
 
         // Parse Docker Output
-        const docker_rows = dockerOutput.split("\n");
+        if (dockerOutput) {
+          const docker_rows = dockerOutput.split("\n");
 
-        let count = 0
-        let ports = null;
-        let command = null;
-        let name = null;
-        for (let row of docker_rows) {
-          if (row == 'YOUSSH') {
-            ++count;
-            continue;
-          }
-          if (count == 1) {
-            ports = row.split(",");
-            ++count;
-            continue;
-          }
-          if (count == 2) {
-            command = row;
-            ++count;
-            continue;
-          }
-          if (count == 3) {
-            name = row;
-            for (let ele of ports) {
-              let port = ele.split("->")[0].split(":").pop()
-              if (portsUsed.indexOf(port) != -1) continue;
-              portsUsed.push(port)
-              const entry = {
-                "command": command, "title": name, "user": null, "pid": null,
-                "remotePort": port, "localPort": null, "sshAgentPid": null,
-                "faviconURL": null, "state": "unforwarded"
-              }
-              processList.push(entry);
+          let count = 0
+          let ports = null;
+          let command = null;
+          let name = null;
+          for (let row of docker_rows) {
+            if (row == 'YOUSSH') {
+              ++count;
+              continue;
             }
-            // Reset state for next iteration
-            count = 0
-            ports = null;
-            command = null;
-            name = null;
+            if (count == 1) {
+              ports = row.split(",");
+              ++count;
+              continue;
+            }
+            if (count == 2) {
+              command = row;
+              ++count;
+              continue;
+            }
+            if (count == 3) {
+              name = row;
+              for (let ele of ports) {
+                let port = ele.split("->")[0].split(":").pop()
+                if (portsUsed.indexOf(port) != -1) continue;
+                portsUsed.push(port)
+                const entry = {
+                  "command": command, "title": name, "user": null, "pid": null,
+                  "remotePort": port, "localPort": null, "sshAgentPid": null,
+                  "faviconURL": null, "state": "unforwarded"
+                }
+                processList.push(entry);
+              }
+              // Reset state for next iteration
+              count = 0
+              ports = null;
+              command = null;
+              name = null;
+            }
           }
         }
 

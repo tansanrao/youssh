@@ -134,45 +134,47 @@ class HostsStateManager {
                 processList.push(entry);
             }
             // Parse Docker Output
-            const docker_rows = dockerOutput.split("\n");
-            let count = 0;
-            let ports = null;
-            let command = null;
-            let name = null;
-            for (let row of docker_rows) {
-                if (row == 'YOUSSH') {
-                    ++count;
-                    continue;
-                }
-                if (count == 1) {
-                    ports = row.split(",");
-                    ++count;
-                    continue;
-                }
-                if (count == 2) {
-                    command = row;
-                    ++count;
-                    continue;
-                }
-                if (count == 3) {
-                    name = row;
-                    for (let ele of ports) {
-                        let port = ele.split("->")[0].split(":").pop();
-                        if (portsUsed.indexOf(port) != -1)
-                            continue;
-                        portsUsed.push(port);
-                        const entry = {
-                            "command": command, "title": name, "user": null, "pid": null,
-                            "remotePort": port, "localPort": null, "sshAgentPid": null,
-                            "faviconURL": null, "state": "unforwarded"
-                        };
-                        processList.push(entry);
+            if (dockerOutput) {
+                const docker_rows = dockerOutput.split("\n");
+                let count = 0;
+                let ports = null;
+                let command = null;
+                let name = null;
+                for (let row of docker_rows) {
+                    if (row == 'YOUSSH') {
+                        ++count;
+                        continue;
                     }
-                    // Reset state for next iteration
-                    count = 0;
-                    ports = null;
-                    command = null;
-                    name = null;
+                    if (count == 1) {
+                        ports = row.split(",");
+                        ++count;
+                        continue;
+                    }
+                    if (count == 2) {
+                        command = row;
+                        ++count;
+                        continue;
+                    }
+                    if (count == 3) {
+                        name = row;
+                        for (let ele of ports) {
+                            let port = ele.split("->")[0].split(":").pop();
+                            if (portsUsed.indexOf(port) != -1)
+                                continue;
+                            portsUsed.push(port);
+                            const entry = {
+                                "command": command, "title": name, "user": null, "pid": null,
+                                "remotePort": port, "localPort": null, "sshAgentPid": null,
+                                "faviconURL": null, "state": "unforwarded"
+                            };
+                            processList.push(entry);
+                        }
+                        // Reset state for next iteration
+                        count = 0;
+                        ports = null;
+                        command = null;
+                        name = null;
+                    }
                 }
             }
             // Update hosts state with the remote processes
